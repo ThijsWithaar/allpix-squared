@@ -67,10 +67,25 @@ std::shared_ptr<DetectorModel> DetectorModel::factory(const std::string& name, c
     return model;
 }
 
-DetectorModel::DetectorModel(std::string type, std::shared_ptr<DetectorAssembly> assembly, ConfigReader reader)
-    : type_(std::move(type)), assembly_(std::move(assembly)), reader_(std::move(reader)) {
+DetectorModel::DetectorModel(std::string type, std::shared_ptr<DetectorAssembly> assembly, ConfigReader reader):
+    DetectorModel(type,
+                  assembly,
+                  reader.getHeaderConfiguration(),
+                  reader.getConfigurations("implant"),
+                  reader.getConfigurations("support"))
+{
+}
+
+DetectorModel::DetectorModel(
+            std::string type,
+            std::shared_ptr<DetectorAssembly> assembly,
+            Configuration config,
+            std::vector<Configuration> implant,
+            std::vector<Configuration> support):
+        type_(std::move(type)),
+        assembly_(std::move(assembly))
+{
     using namespace ROOT::Math;
-    auto config = reader_.getHeaderConfiguration();
 
     // Sensor thickness
     setSensorThickness(config.get<double>("sensor_thickness"));
@@ -92,7 +107,7 @@ DetectorModel::DetectorModel(std::string type, std::shared_ptr<DetectorAssembly>
     }
 
     // Read implants
-    for(auto& implant_config : reader_.getConfigurations("implant")) {
+    for(auto& implant_config : implant) {
         auto imtype = implant_config.get<Implant::Type>("type");
         auto shape = implant_config.get<Implant::Shape>("shape", Implant::Shape::RECTANGLE);
         auto size = implant_config.get<XYZVector>("size");
@@ -103,7 +118,7 @@ DetectorModel::DetectorModel(std::string type, std::shared_ptr<DetectorAssembly>
     }
 
     // Read support layers
-    for(auto& support_config : reader_.getConfigurations("support")) {
+    for(auto& support_config : support) {
         auto thickness = support_config.get<double>("thickness");
         auto size = support_config.get<XYVector>("size");
         auto location = support_config.get<std::string>("location", "chip");

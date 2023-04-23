@@ -17,6 +17,21 @@
 
 using namespace allpix;
 
+
+PixelDetectorModel::PixelDetectorModel(std::string type,
+                    const std::shared_ptr<DetectorAssembly>& assembly,
+                    Configuration header,
+                    std::vector<Configuration> implant,
+                    std::vector<Configuration> support,
+                    ROOT::Math::DisplacementVector2D<ROOT::Math::Cartesian2D<unsigned int>> number_of_pixels,
+                    ROOT::Math::XYVector pixel_size)
+    : DetectorModel(std::move(type), assembly, header, implant, support)
+{
+    setNPixels(number_of_pixels);
+    setPixelSize(pixel_size);
+}
+
+
 PixelDetectorModel::PixelDetectorModel(std::string type,
                                        const std::shared_ptr<DetectorAssembly>& assembly,
                                        const ConfigReader& reader)

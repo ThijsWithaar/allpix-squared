@@ -5,7 +5,7 @@
 ALLPIX_DETECTOR_MODULE(MODULE_NAME)
 
 # Add source files to library
-ALLPIX_MODULE_SOURCES(${MODULE_NAME} ElectricFieldReaderModule.cpp)
+ALLPIX_MODULE_SOURCES(${MODULE_NAME} ElectricFieldReaderModule.cpp TensorMesh.cpp)
 
 # Register module tests
 ALLPIX_MODULE_TESTS(${MODULE_NAME} "tests")

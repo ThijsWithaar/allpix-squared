@@ -45,6 +45,14 @@ namespace allpix {
                                     const std::shared_ptr<DetectorAssembly>& assembly,
                                     const ConfigReader& reader);
 
+        explicit PixelDetectorModel(std::string type,
+                                    const std::shared_ptr<DetectorAssembly>& assembly,
+                                    Configuration header,
+                                    std::vector<Configuration> implant,
+                                    std::vector<Configuration> support,
+                                    ROOT::Math::DisplacementVector2D<ROOT::Math::Cartesian2D<unsigned int>> number_of_pixels,
+                                    ROOT::Math::XYVector pixel_size);
+
         /**
          * @brief Returns if a local position is within the sensitive device
          * @param local_pos Position in local coordinates of the detector model

@@ -26,6 +26,10 @@ ENDIF()
 SET(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_SYSTEM_NAME}")
 
 # Configure the targets and components to include
-SET(CPACK_GENERATOR "TGZ")
+if(EXISTS /etc/debian_version)
+    SET(CPACK_SOURCE_GENERATOR "DEB" CACHE STRING "Package format")
+else()
+    SET(CPACK_GENERATOR "TGZ" CACHE STRING "Package format")
+endif()
 SET(CPACK_COMPONENTS_ALL application modules)
 SET(CPACK_INSTALLED_DIRECTORIES "${CMAKE_CURRENT_BINARY_DIR}/setup/;.")

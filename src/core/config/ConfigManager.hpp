@@ -39,13 +39,24 @@ namespace allpix {
     public:
         /**
          * @brief Construct the configuration manager
+
+        When allpix is used as a library, this allows setting the configuration directly, without an intermediate file
+        */
+        explicit ConfigManager(
+            Configuration globalcfg,
+            std::vector<Configuration> modules,
+            std::vector<std::string> global,
+            std::vector<std::string> ignore = {"Ignore"});
+
+        /**
+         * @brief Construct the configuration manager
          * @param file_name Path to the main configuration file
          * @param global List of sections representing the global configuration (excluding the empty header section)
          * @param ignore List of sections that should be ignored
          */
         explicit ConfigManager(std::filesystem::path file_name,
-                               std::initializer_list<std::string> global = {},
-                               std::initializer_list<std::string> ignore = {"Ignore"});
+                               std::vector<std::string> global = {},
+                               std::vector<std::string> ignore = {"Ignore"});
         /**
          * @brief Use default destructor
          */
@@ -113,11 +124,21 @@ namespace allpix {
          * @note Instance configuration options are applied in \ref ConfigManager::addInstanceConfiguration instead
          */
         bool loadModuleOptions(const std::vector<std::string>& options);
+
         /**
          * @brief Get all the detector configurations
          * @return Reference to list of detector configurations
          */
         std::list<Configuration>& getDetectorConfigurations();
+
+        /**
+         * @brief Set (overwrite) all the detector configurations
+         * @param detector_configs The new detector configurations
+         *
+         * This method is intended for when allpix is used as a library,
+         * to allow setting up a simulation without any configuration files.
+         */
+        void setDetectorConfigurations(const std::list<Configuration>& detector_configs);
 
         /**
          * @brief Load detector specific options
@@ -127,6 +148,9 @@ namespace allpix {
         bool loadDetectorOptions(const std::vector<std::string>& options);
 
     private:
+        void setNames(std::vector<std::string> global, std::vector<std::string> ignore);
+        void setConfigurations(Configuration global, std::vector<Configuration> modules);
+
         std::set<std::string> global_names_{};
         std::set<std::string> ignore_names_{};
 

@@ -183,6 +183,13 @@ namespace allpix {
          */
         explicit DetectorModel(std::string type, std::shared_ptr<DetectorAssembly> assembly, ConfigReader reader);
 
+        explicit DetectorModel(
+            std::string type,
+            std::shared_ptr<DetectorAssembly> assembly,
+            Configuration header,
+            std::vector<Configuration> implant,
+            std::vector<Configuration> support);
+
         /**
          * @brief Essential virtual destructor
          */

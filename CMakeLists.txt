@@ -409,6 +409,12 @@ ADD_SUBDIRECTORY(src/exec)
 # Handle the included tools
 ADD_SUBDIRECTORY(tools)
 
+# Build the python bindings
+ADD_SUBDIRECTORY(src/py)
+
+# Free-standing unit-test
+ADD_SUBDIRECTORY(src/test)
+
 ##################
 # Test summaries #
 ##################

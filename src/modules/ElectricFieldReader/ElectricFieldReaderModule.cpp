@@ -28,6 +28,8 @@
 #include "core/utils/log.h"
 #include "core/utils/unit.h"
 
+#include "TensorMesh.hpp"
+
 using namespace allpix;
 
 ElectricFieldReaderModule::ElectricFieldReaderModule(Configuration& config, Messenger*, std::shared_ptr<Detector> detector)
@@ -133,6 +135,9 @@ void ElectricFieldReaderModule::initialize() {
         LOG(TRACE) << "Adding custom electric field";
         auto [field_function, field_type] = get_custom_field_function();
         detector_->setElectricFieldFunction(field_function, thickness_domain, field_type);
+    } else if(field_model == ElectricField::TENSORMESH) {
+        LOG(TRACE) << "Adding tensormesh electric field";
+        detector_->setElectricFieldFunction(get_tensormesh_field_function(), thickness_domain, FieldType::CUSTOM);
     }
 
     // Produce histograms if needed
@@ -264,6 +269,18 @@ std::pair<FieldFunction<ROOT::Math::XYZVector>, FieldType> ElectricFieldReaderMo
                                 "field function either needs one component (z) or three components (x,y,z) but " +
                                     std::to_string(field_functions.size()) + " were given");
     }
+}
+
+FieldFunction<ROOT::Math::XYZVector> ElectricFieldReaderModule::get_tensormesh_field_function()
+{
+    auto fname = config_.getPath("file_name", true);
+    std::ifstream f(fname);
+    TensorMesh mesh = LoadTensorMeshAscii(f).value();
+
+    return [mesh](const ROOT::Math::XYZPoint& pos)
+    {
+        return -mesh.gradient(pos);
+    };
 }
 
 /**

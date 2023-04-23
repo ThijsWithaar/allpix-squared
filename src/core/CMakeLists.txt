@@ -8,6 +8,7 @@ INCLUDE_DIRECTORIES(SYSTEM ${ALLPIX_DEPS_INCLUDE_DIRS})
 ADD_LIBRARY(
     AllpixCore SHARED
     utils/log.cpp
+    utils/simulator.cpp
     utils/text.cpp
     utils/unit.cpp
     module/Module.cpp
